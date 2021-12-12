@@ -1,6 +1,8 @@
+import { Observable } from "rxjs";
+
 export abstract class CrudRepository<Entity> {
-    public abstract create(exam: Entity): Entity;
-    public abstract getAll(): Entity;
-    public abstract update(id: number, exam: Partial<Entity>): Entity;
-    public abstract delete(id: number): void;
+    public abstract create(item: Entity): Observable<Entity>;
+    public abstract getAll(): Observable<Entity[]>;
+    public abstract update(id: number, item: Partial<Entity>): Observable<Entity>;
+    public abstract delete(id: number): Observable<void>;
 }
