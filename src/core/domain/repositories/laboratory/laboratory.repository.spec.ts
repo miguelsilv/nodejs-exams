@@ -1,110 +1,104 @@
-import { throwError, firstValueFrom, Observable, of, NotFoundError } from "rxjs";
-import { Laboratory } from "../../entities/laboratory/laboratory.entity";
+import { firstValueFrom, catchError } from "rxjs";
+import { LaboratoryMockRepository } from "../../../../data/laboratory/laboratory-mock.repository";
+import { CreateLaboratoryDto } from "../../../../shared/dtos/laboratory/create-laboratory.dto";
+import { CreatedLaboratoryDto } from "../../../../shared/dtos/laboratory/created-laboratory.dto";
 import { LaboratoryRepository } from "./laboratory.repository";
 
-class LaboratoryRepositoryTest implements LaboratoryRepository {
-    private readonly laboratories: Laboratory[] = [];
-
-    public create(laboratory: Laboratory): Observable<Laboratory> {
-        if (laboratory == null) {
-            return throwError(() => new Error("Não foi possivel cadastrar o laboratório."));
-        }
-
-        const last = this.laboratories.slice(-1);
-
-        laboratory.id = last.length > 0 ? last[0].id + 1 : 1;
-
-        this.laboratories.push(laboratory);
-        return of(laboratory);
-    }
-
-    public getAll(): Observable<Laboratory[]> {
-        return of(this.laboratories);
-    }
-
-    public update(id: number, laboratory: Partial<Laboratory>): Observable<Laboratory> {
-        const index = this.getIndexById(id);
-
-        if (index <= 0) {
-            return throwError(() => new Error("Laboratório não encontrado."));
-        }
-
-        for (const key in laboratory) {
-            this.laboratories[index][key] = laboratory[key];
-        }
-
-        return of(this.laboratories[index]);
-    }
-
-    public delete(id: number): Observable<void> {
-        const index = this.getIndexById(id);
-
-        if (index <= 0) {
-            return throwError(() => new Error("Laboratório não encontrado."));
-        }
-
-        this.laboratories.splice(index, 1);
-
-        return of();
-    }
-
-    private getIndexById(id: number) {
-        return this.laboratories.findIndex(laboratory => laboratory.id == id);
-    }
-}
 
 describe("LaboratoryRepository", () => {
     let repository: LaboratoryRepository;
 
     beforeEach(() => {
-        repository = new LaboratoryRepositoryTest();
+        repository = new LaboratoryMockRepository();
     });
 
-    describe("Cadastrar um novo laboratório", () => {
+    describe("Criar um novo laboratório", () => {
 
         it("Deve ter um id", async () => {
-            const laboratory = new Laboratory();
-            laboratory.name = "Lab A";
-            laboratory.adress = "Rua A";
+            const create = new CreateLaboratoryDto();
+            create.name = "Lab A";
+            create.adress = "Rua A";
 
-            const result = await firstValueFrom(repository.create(laboratory));
+            const created = await firstValueFrom(repository.create(create));
 
-            expect(result.id).not.toBeNull();
+            expect(created.id).not.toBeNull();
         });
 
         it("Deve retornar os campos iguais aos passados", async () => {
-            const laboratory = new Laboratory();
-            laboratory.name = "Lab A";
-            laboratory.adress = "Rua A";
+            const create = new CreateLaboratoryDto();
+            create.name = "Lab A";
+            create.adress = "Rua A";
 
-            const result = await firstValueFrom(repository.create(laboratory));
+            const created = await firstValueFrom(repository.create(create));
 
-            expect(result.name).toEqual(laboratory.name);
-            expect(result.adress).toEqual(laboratory.adress);
+            expect(created.name).toEqual(create.name);
+            expect(created.adress).toEqual(create.adress);
         });
 
         it("Deve ser um laboratório ativo ao cadastrar", async () => {
-            const laboratory = new Laboratory();
-            laboratory.name = "Lab A";
-            laboratory.adress = "Rua A";
+            const create = new CreateLaboratoryDto();
+            create.name = "Lab Test 1";
+            create.adress = "Rua Test 1";
 
-            const result = await firstValueFrom(repository.create(laboratory));
+            const created = await firstValueFrom(repository.create(create));
 
-            expect(result.name).toEqual(laboratory.name);
-            expect(result.adress).toEqual(laboratory.adress);
+            expect(created.isActive).toEqual(true);
         });
     });
 
-    // describe("Obter uma lista de laboratórios ativos", () => {
+    it("Obter uma lista de laboratórios ativos", async () => {
+        const laboratories = await firstValueFrom(repository.getAll());
 
-    // });
+        expect(laboratories.every(lab => lab.isActive)).toEqual(true);
+    });
 
-    // describe("Atualizar um laboratório existente", () => {
+    describe("Atualizar um laboratório existente", () => {
 
-    // });
+        it("Não pode atualizar caso não exista", async () => {
+            const update = new CreatedLaboratoryDto();
+            update.name = "Novo nome";
+            update.id = 999999999; // inexistente
 
-    // describe("Remover logicamente um laboratório ativo", () => {
+            const updated = await firstValueFrom(repository.update(update.id, update).pipe(catchError((e) => [e])));
 
-    // });
+            expect(updated).toBeInstanceOf(Error);
+        });
+
+        it("Deve atualizar caso exista", async () => {
+            const update = new CreatedLaboratoryDto();
+            update.name = "Novo nome";
+            update.id = 1;
+
+            const updated: CreatedLaboratoryDto = await firstValueFrom(repository.update(update.id, update).pipe(catchError((e) => [e])));
+
+            expect(updated).not.toBeInstanceOf(Error);
+            expect(updated.name).toEqual(update.name);
+            expect(update.adress).not.toBeNull();
+        });
+
+    });
+
+    describe("Remover um laboratório ativo", () => {
+
+        it("A remoção deve ser logica", async () => {
+            const id = 1;
+
+            await firstValueFrom(repository.delete(id), { defaultValue: void (0) });
+
+            const removed = (<CreatedLaboratoryDto[]>repository['db']).find(lab => lab.id === id);
+
+            expect(removed.isActive).toEqual(false);
+        });
+
+        it("Não pode remover um laboratório que não existe", async () => {
+            const id = 99999;
+
+            const removed = firstValueFrom(repository.delete(id).pipe(catchError((e) => [e])), { defaultValue: void (0) });
+
+            expect(await removed).toBeInstanceOf(Error);
+
+        });
+
+    });
 
 });
