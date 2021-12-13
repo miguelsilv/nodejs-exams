@@ -1,5 +1,7 @@
 export class Laboratory {
-    name: string;
-    adress: string;
-    isActive: boolean;
+    public id?: number;
+    public name: string;
+    public adress: string;
+    public isActive: boolean;
+
 }
