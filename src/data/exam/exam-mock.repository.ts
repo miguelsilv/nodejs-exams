@@ -1,26 +1,28 @@
 import { Observable, of, throwError } from "rxjs";
+import { Exam } from "src/core/domain/entities/exam/exam.entity";
+import { ExamType } from "src/shared/enums/exam-type.enum";
 import { ExamRepository } from "../../core/domain/repositories/exam/exam.repository";
 import { CreateExamDto } from "../../shared/dtos/exam/create-exam.dto";
 import { CreatedExamDto } from "../../shared/dtos/exam/created-exam.dto";
 
 export class ExamMockRepository extends ExamRepository {
-    public db: CreatedExamDto[] = [
+    public db: Exam[] = [
         {
             id: 1,
             name: "Exame A",
-            type: "",
+            type: ExamType.clinicalAnalysis,
             isActive: true,
         },
         {
             id: 2,
             name: "Exame B",
-            type: "",
+            type: ExamType.image,
             isActive: true,
         },
         {
             id: 3,
             name: "Exame C",
-            type: "",
+            type: ExamType.image,
             isActive: false,
         }
     ];
@@ -32,15 +34,20 @@ export class ExamMockRepository extends ExamRepository {
 
         const last = this.db.slice(-1);
 
-        const created: CreatedExamDto = {
+        const created = new Exam({
             id: last.length > 0 ? last[0].id + 1 : 1,
             isActive: true,
-            ...exam
-        }
+            type: exam.type,
+            name: exam.name
+        });
 
         this.db.push(created);
 
-        return of(created);
+        return of(new CreatedExamDto({
+            id: created.id,
+            name: created.name,
+            type: created.type
+        }));
     }
 
     public getAll(): Observable<CreatedExamDto[]> {
