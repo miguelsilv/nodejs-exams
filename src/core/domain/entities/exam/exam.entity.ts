@@ -1,5 +1,9 @@
 export class Exam {
-    name: string;
-    type: any;
-    isActive: boolean;
+    public id: number;
+    public name: string;
+    public type: any;
+    public isActive: boolean;
+    constructor(partial: Partial<Exam>) {
+        Object.assign(this, partial);
+    }
 }

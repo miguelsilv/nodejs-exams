@@ -1,9 +1,9 @@
 import { Observable, of, throwError } from "rxjs";
-import { ExamRepository } from "src/core/domain/repositories/exam/exam.repository";
+import { ExamRepository } from "../../core/domain/repositories/exam/exam.repository";
 import { CreateExamDto } from "../../shared/dtos/exam/create-exam.dto";
 import { CreatedExamDto } from "../../shared/dtos/exam/created-exam.dto";
 
-export class ExamMockRepository implements ExamRepository {
+export class ExamMockRepository extends ExamRepository {
     public db: CreatedExamDto[] = [
         {
             id: 1,

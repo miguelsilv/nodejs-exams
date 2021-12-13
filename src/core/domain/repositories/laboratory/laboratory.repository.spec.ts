@@ -2,6 +2,7 @@ import { firstValueFrom, catchError } from "rxjs";
 import { LaboratoryMockRepository } from "../../../../data/laboratory/laboratory-mock.repository";
 import { CreateLaboratoryDto } from "../../../../shared/dtos/laboratory/create-laboratory.dto";
 import { CreatedLaboratoryDto } from "../../../../shared/dtos/laboratory/created-laboratory.dto";
+import { Laboratory } from "../../entities/laboratory/laboratory.entity";
 import { LaboratoryRepository } from "./laboratory.repository";
 
 
@@ -15,7 +16,7 @@ describe("LaboratoryRepository", () => {
     describe("Criar um novo laboratório", () => {
 
         it("Deve ter um id", async () => {
-            const create = new CreateLaboratoryDto();
+            const create = new Laboratory();
             create.name = "Lab A";
             create.adress = "Rua A";
 
@@ -42,14 +43,10 @@ describe("LaboratoryRepository", () => {
 
             const created = await firstValueFrom(repository.create(create));
 
-            expect(created.isActive).toEqual(true);
+            const createdDb = (<Laboratory[]>repository['db']).find(lab => lab.id === created.id);
+
+            expect(createdDb.isActive).toEqual(true);
         });
-    });
-
-    it("Obter uma lista de laboratórios ativos", async () => {
-        const laboratories = await firstValueFrom(repository.getAll());
-
-        expect(laboratories.every(lab => lab.isActive)).toEqual(true);
     });
 
     describe("Atualizar um laboratório existente", () => {
@@ -85,7 +82,7 @@ describe("LaboratoryRepository", () => {
 
             await firstValueFrom(repository.delete(id), { defaultValue: void (0) });
 
-            const removed = (<CreatedLaboratoryDto[]>repository['db']).find(lab => lab.id === id);
+            const removed = (<Laboratory[]>repository['db']).find(lab => lab.id === id);
 
             expect(removed.isActive).toEqual(false);
         });
