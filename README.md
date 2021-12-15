@@ -7,7 +7,7 @@ esse exame.
 
 # Deploy
 
-Realizei o deploy no heroku, a api tá disponível no seguinte endpoint: `https://warm-taiga-16710.herokuapp.com/doc`
+Realizei o deploy no heroku, a api tá disponível no seguinte endpoint:  [LINK API](https://warm-taiga-16710.herokuapp.com/doc)
 
 
 # Descrição do projeto
