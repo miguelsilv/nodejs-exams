@@ -2,6 +2,21 @@ version: "3.5"
 
 services:
 
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+    volumes:
+      - api-logs-volume:/usr/src/node-api/logs:rw
+    depends_on:
+      - db
+
   db:
     container_name: ${MYSQL_HOST}
     image: mysql:5.7
@@ -15,7 +30,7 @@ services:
     ports:
       - "${MYSQL_PORT}:${MYSQL_PORT}"
     volumes:
-      - teste-backend-wa-mysql-volume:/var/lib/mysql
+      - mysql-volume:/var/lib/mysql
 
   adminer:
     image: adminer
@@ -31,4 +46,5 @@ services:
       ADMINER_DESIGN: galkaev
 
 volumes:
-  teste-backend-wa-mysql-volume: null
+  mysql-volume: null
+  api-logs-volume: null

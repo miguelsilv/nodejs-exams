@@ -1,3 +1,21 @@
+# Descrição do projeto
+
+## env file
+Existe um arquivo chamado `example.env` então antes executar o projeto localmente, é preciso duplicar o arquivo `.env` e setar os valores de ambiente. 
+
+## Swagger UI
+
+O projeto utiliza o swagger então basta acessar o `/doc` que conterá instruções de uso da api.
+
+## Banco de dados 
+
+O mysql é requerido. No momento estou usando a versão 5.7.
+
+## Docker
+
+A aplicação roda em docker e já possui um docker-compose configurado, bastaria rodar um comando como `docker-compose up -d` que teria o projeto rodando em backend.
+
+
 # Descrição da arquitetura
 Foi utilizado uma implementação baseada no clean architecture, com alguns padrões de repositories para dados fornecidos pelo `TypeORM`.
 
