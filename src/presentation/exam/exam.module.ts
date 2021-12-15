@@ -6,6 +6,7 @@ import { CreateExamUseCase } from 'src/core/use-cases/exam/create-exam.usecase';
 import { GetAllExamsUseCase } from 'src/core/use-cases/exam/get-all-exams.usecase';
 import { UpdateExamUseCase } from 'src/core/use-cases/exam/update-exam.usecase';
 import { DeleteExamUseCase } from 'src/core/use-cases/exam/delete-exam.usecase';
+import { ExamDataRepository } from 'src/data/exam/exam-data.repository';
 
 @Module({
     controllers: [
@@ -16,7 +17,7 @@ import { DeleteExamUseCase } from 'src/core/use-cases/exam/delete-exam.usecase';
         GetAllExamsUseCase,
         UpdateExamUseCase,
         DeleteExamUseCase,
-        { provide: ExamRepository, useClass: ExamMockRepository, }
+        { provide: ExamRepository, useClass: ExamDataRepository, }
     ]
 })
 export class ExamModule { }
