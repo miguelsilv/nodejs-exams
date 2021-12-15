@@ -1,3 +1,4 @@
+import { NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { from, map, Observable, of, switchMap, tap, throwError } from "rxjs";
 import { Laboratory } from "src/core/domain/entities/laboratory/laboratory.entity";
@@ -5,6 +6,7 @@ import { LaboratoryRepository } from "src/core/domain/repositories/laboratory/la
 import { GetExamDto } from "src/shared/dtos/exam/get-exam-dto";
 import { CreatedLaboratoryDto } from "src/shared/dtos/laboratory/created-laboratory.dto";
 import { Repository } from "typeorm";
+import { isNullOrUndefined } from "util";
 import { Exam } from "../../core/domain/entities/exam/exam.entity";
 import { ExamRepository } from "../../core/domain/repositories/exam/exam.repository";
 import { CreateExamDto } from "../../shared/dtos/exam/create-exam.dto";
@@ -42,6 +44,11 @@ export class ExamDataRepository extends ExamRepository {
         const exam = from(this.examDb.findOne(id));
 
         return exam.pipe(
+            switchMap(exam => {
+                if (exam) return of(exam);
+
+                return throwError(() => new NotFoundException("Exame não encontrado."))
+            }),
             map(exam => new GetExamDto({
                 id: exam.id,
                 name: exam.name,
@@ -66,7 +73,7 @@ export class ExamDataRepository extends ExamRepository {
         const partial: Partial<Exam> = new Exam();
 
         for (const key in update) {
-            if (update[key]) {
+            if (update[key] != undefined || update[key] != null) {
                 partial[key] = update[key];
             }
         }
@@ -97,9 +104,8 @@ export class ExamDataRepository extends ExamRepository {
                         }));
                     }
 
-                    return throwError(() => new Error("Exame não encontrado!"))
+                    return throwError(() => new NotFoundException("Exame não encontrado!"))
                 }),
-                tap(result => console.log("Chega", result)),
                 switchMap(() => this.getById(id))
             );
 
