@@ -12,10 +12,6 @@ RUN apk add python3 g++ make
 COPY . /usr/src/node-api/
 RUN npm install
 
-# instalação dos pacotes para envio de email
-RUN apk add msmtp
-RUN ln -sf /usr/bin/msmtp /usr/sbin/sendmail
-
 # abrindo a porta 3000
 EXPOSE 3000
 
