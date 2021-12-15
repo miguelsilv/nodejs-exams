@@ -4,13 +4,14 @@ services:
 
   db:
     container_name: ${MYSQL_HOST}
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:5.7
+    #command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_TCP_PORT: ${MYSQL_PORT}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      MYSQL_ROOT_HOST: '%'
     ports:
       - "${MYSQL_PORT}:${MYSQL_PORT}"
     volumes:
@@ -23,8 +24,8 @@ services:
       - 8080:8080
     depends_on:
       - db
-    links:
-      - db:${MYSQL_HOST}
+    # links:
+    #   - db:${MYSQL_HOST}
     environment:
       ADMINER_DEFAULT_SERVER: db
       ADMINER_DESIGN: galkaev

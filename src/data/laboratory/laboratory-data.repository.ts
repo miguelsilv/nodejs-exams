@@ -1,3 +1,4 @@
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { from, map, Observable, of, switchMap, throwError } from "rxjs";
 import { Repository } from "typeorm";
@@ -6,6 +7,7 @@ import { LaboratoryRepository } from "../../core/domain/repositories/laboratory/
 import { CreateLaboratoryDto } from "../../shared/dtos/laboratory/create-laboratory.dto";
 import { CreatedLaboratoryDto } from "../../shared/dtos/laboratory/created-laboratory.dto";
 
+@Injectable()
 export class LaboratoryDataRepository extends LaboratoryRepository {
 
     constructor(

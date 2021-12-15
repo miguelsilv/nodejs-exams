@@ -1,3 +1,4 @@
+import { Injectable } from "@nestjs/common";
 import { Observable, of, throwError } from "rxjs";
 import { Exam } from "src/core/domain/entities/exam/exam.entity";
 import { ExamType } from "src/shared/enums/exam-type.enum";
@@ -5,6 +6,7 @@ import { ExamRepository } from "../../core/domain/repositories/exam/exam.reposit
 import { CreateExamDto } from "../../shared/dtos/exam/create-exam.dto";
 import { CreatedExamDto } from "../../shared/dtos/exam/created-exam.dto";
 
+@Injectable()
 export class ExamMockRepository extends ExamRepository {
     public db: Exam[] = [
         {
@@ -12,18 +14,21 @@ export class ExamMockRepository extends ExamRepository {
             name: "Exame A",
             type: ExamType.clinicalAnalysis,
             isActive: true,
+            laboratories: []
         },
         {
             id: 2,
             name: "Exame B",
             type: ExamType.image,
             isActive: true,
+            laboratories: []
         },
         {
             id: 3,
             name: "Exame C",
             type: ExamType.image,
             isActive: false,
+            laboratories: []
         }
     ];
 

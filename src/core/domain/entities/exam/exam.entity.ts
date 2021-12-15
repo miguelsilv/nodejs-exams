@@ -1,7 +1,6 @@
-import { IsEnum } from "class-validator";
-import { ExamType } from "src/shared/enums/exam-type.enum";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Laboratory } from "../laboratory/laboratory.entity";
+import { ExamType } from "src/shared/enums/exam-type.enum";
 
 @Entity()
 export class Exam {
@@ -11,7 +10,7 @@ export class Exam {
     @Column()
     public name: string;
 
-    @Column({ enum: ExamType })
+    @Column({ type: 'enum', enum: ExamType })
     public type: ExamType;
 
     @Column({ default: true })
