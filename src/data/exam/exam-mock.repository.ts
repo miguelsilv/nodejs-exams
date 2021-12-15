@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Observable, of, throwError } from "rxjs";
 import { Exam } from "src/core/domain/entities/exam/exam.entity";
+import { GetExamDto } from "src/shared/dtos/exam/get-exam-dto";
 import { ExamType } from "src/shared/enums/exam-type.enum";
 import { ExamRepository } from "../../core/domain/repositories/exam/exam.repository";
 import { CreateExamDto } from "../../shared/dtos/exam/create-exam.dto";
@@ -8,6 +9,7 @@ import { CreatedExamDto } from "../../shared/dtos/exam/created-exam.dto";
 
 @Injectable()
 export class ExamMockRepository extends ExamRepository {
+
     public db: Exam[] = [
         {
             id: 1,
@@ -84,6 +86,14 @@ export class ExamMockRepository extends ExamRepository {
         this.db[index].isActive = false;
 
         return of();
+    }
+
+    public getById(id: number): Observable<GetExamDto> {
+        throw new Error("Method not implemented.");
+    }
+
+    public setLaboratory(id: number, laboratoryId: number): Observable<GetExamDto> {
+        throw new Error("Method not implemented.");
     }
 
     private getIndexById(id: number) {

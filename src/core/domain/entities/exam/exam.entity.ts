@@ -16,9 +16,10 @@ export class Exam {
     @Column({ default: true })
     public isActive: boolean;
 
-    @ManyToMany(() => Laboratory)
+    @ManyToMany(() => Laboratory, lab => lab.exams, { eager: true })
     @JoinTable()
     public laboratories: Laboratory[];
+
     constructor(partial?: Partial<Exam>) {
         Object.assign(this, partial);
     }
