@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpException, NotFoundException, Param, Patch, Post, Put } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { CreateExamUseCase } from "src/core/use-cases/exam/create-exam.usecase";
 import { DeleteExamUseCase } from "src/core/use-cases/exam/delete-exam.usecase";
 import { GetAllExamsUseCase } from "src/core/use-cases/exam/get-all-exams.usecase";
@@ -82,6 +82,10 @@ export class ExamController {
         type: CreatedExamDto,
     })
     public update(@Param('id') id: number, @Body() exam: Partial<CreatedExamDto>) {
+        if (id != exam.id) {
+            return throwError(() => new BadRequestException("Não é possivel editar o id do exame."))
+        }
+
         return this.updateExamUseCase.execute(id, exam);
     }
 

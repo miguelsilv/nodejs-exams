@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from "@nestjs/common";
-import { defaultIfEmpty, Observable } from "rxjs";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Put } from "@nestjs/common";
+import { defaultIfEmpty, Observable, throwError } from "rxjs";
 import { CreateLaboratoryUseCase } from "src/core/use-cases/laboratory/create-laboratory.usecase";
 import { DeleteLaboratoryUseCase } from "src/core/use-cases/laboratory/delete-laboratory.usecase";
 import { GetAllLaboratoriesUseCase } from "src/core/use-cases/laboratory/get-all-laboratories.usecase";
@@ -37,6 +37,10 @@ export class LaboratoryController {
 
     @Patch(':id')
     public update(@Param('id') id: number, @Body() laboratory: Partial<CreatedLaboratoryDto>) {
+        if (id != laboratory.id) {
+            return throwError(() => new BadRequestException("Não é possivel editar o id do laboratório."))
+        }
+
         return this.updateLaboratoryUseCase.execute(+id, laboratory);
     }
 
