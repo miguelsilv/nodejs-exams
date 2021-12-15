@@ -1,3 +1,15 @@
+# Pendencias 
+Do teste, ficou faltando a parte de `Funcionalidades extras`, mas que eu pretendo fazer assim que tiver um tempo, mas provavelmente só no fim de semana (18/12). 
+
+- Possibilidade de executar cadastro, atualização e remoção em lote;
+- Endpoint que faz a busca por nome do exame e retorna todos os laboratórios associados a
+esse exame.
+
+# Deploy
+
+Realizei o deploy no heroku, a api tá disponível no seguinte endpoint: `https://warm-taiga-16710.herokuapp.com/doc`
+
+
 # Descrição do projeto
 
 ## env file

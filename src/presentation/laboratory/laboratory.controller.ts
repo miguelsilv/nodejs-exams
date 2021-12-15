@@ -1,4 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Put } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { defaultIfEmpty, Observable, throwError } from "rxjs";
 import { CreateLaboratoryUseCase } from "src/core/use-cases/laboratory/create-laboratory.usecase";
 import { DeleteLaboratoryUseCase } from "src/core/use-cases/laboratory/delete-laboratory.usecase";
@@ -10,6 +11,7 @@ import { CreatedLaboratoryDto } from "src/shared/dtos/laboratory/created-laborat
 import { GetLaboratoryDto } from "src/shared/dtos/laboratory/get-laboratory.dto";
 
 @Controller("/laboratory")
+@ApiTags("Laboratório")
 export class LaboratoryController {
     constructor(
         private readonly createLaboratoryUseCase: CreateLaboratoryUseCase,
