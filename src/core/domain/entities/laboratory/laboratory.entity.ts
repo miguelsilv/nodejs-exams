@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Exam } from "../exam/exam.entity";
 
 @Entity()
@@ -15,7 +15,18 @@ export class Laboratory {
     @Column({ default: true })
     public isActive: boolean;
 
-    @ManyToMany(() => Exam, exam => exam.laboratories)
+    @ManyToMany(() => Exam, exam => exam.id)
+    @JoinTable({
+        name: "exam_laboratory",
+        joinColumn: {
+            name: "exam",
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "laboratory",
+            referencedColumnName: "id"
+        }
+    })
     public exams: Exam[];
 
     constructor(partial?: Partial<Laboratory>) {

@@ -16,8 +16,18 @@ export class Exam {
     @Column({ default: true })
     public isActive: boolean;
 
-    @ManyToMany(() => Laboratory, lab => lab.exams, { eager: true })
-    @JoinTable()
+    @ManyToMany(() => Laboratory, lab => lab.id, { eager: true })
+    @JoinTable({
+        name: "exam_laboratory",
+        joinColumn: {
+            name: "laboratory",
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "exam",
+            referencedColumnName: "id"
+        }
+    })
     public laboratories: Laboratory[];
 
     constructor(partial?: Partial<Exam>) {

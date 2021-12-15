@@ -8,6 +8,7 @@ import { GetAllLaboratoriesUseCase } from 'src/core/use-cases/laboratory/get-all
 import { LaboratoryDataRepository } from 'src/data/laboratory/laboratory-data.repository';
 import { Laboratory } from 'src/core/domain/entities/laboratory/laboratory.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GetLaboratoryByIdUseCase } from 'src/core/use-cases/laboratory/get-exam-by-id.usecase';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     providers: [
         CreateLaboratoryUseCase,
         GetAllLaboratoriesUseCase,
+        GetLaboratoryByIdUseCase,
         UpdateLaboratoryUseCase,
         DeleteLaboratoryUseCase,
         { provide: LaboratoryRepository, useClass: LaboratoryDataRepository, }

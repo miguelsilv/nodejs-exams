@@ -1,10 +1,12 @@
 import { Observable, of, throwError } from "rxjs";
+import { GetLaboratoryDto } from "src/shared/dtos/laboratory/get-laboratory.dto";
 import { Laboratory } from "../../core/domain/entities/laboratory/laboratory.entity";
 import { LaboratoryRepository } from "../../core/domain/repositories/laboratory/laboratory.repository";
 import { CreateLaboratoryDto } from "../../shared/dtos/laboratory/create-laboratory.dto";
 import { CreatedLaboratoryDto } from "../../shared/dtos/laboratory/created-laboratory.dto";
 
 export class LaboratoryMockRepository extends LaboratoryRepository {
+
     public db: Laboratory[] = [
         new Laboratory({
             id: 1,
@@ -56,6 +58,10 @@ export class LaboratoryMockRepository extends LaboratoryRepository {
             adress: item.adress,
             name: item.name
         })));
+    }
+
+    public getById(id: number): Observable<GetLaboratoryDto> {
+        throw new Error("Method not implemented.");
     }
 
     public update(id: number, laboratory: Partial<CreatedLaboratoryDto>): Observable<CreatedLaboratoryDto> {

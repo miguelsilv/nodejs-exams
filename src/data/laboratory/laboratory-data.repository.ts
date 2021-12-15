@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { from, map, Observable, of, switchMap, throwError } from "rxjs";
-import { Repository } from "typeorm";
+import { from, map, Observable, of, switchMap, tap, throwError } from "rxjs";
+import { CreatedExamDto } from "src/shared/dtos/exam/created-exam.dto";
+import { GetLaboratoryDto } from "src/shared/dtos/laboratory/get-laboratory.dto";
+import { JoinTable, Repository } from "typeorm";
 import { Laboratory } from "../../core/domain/entities/laboratory/laboratory.entity";
 import { LaboratoryRepository } from "../../core/domain/repositories/laboratory/laboratory.repository";
 import { CreateLaboratoryDto } from "../../shared/dtos/laboratory/create-laboratory.dto";
@@ -35,10 +37,30 @@ export class LaboratoryDataRepository extends LaboratoryRepository {
             .pipe(map(labs => labs.map(lab => this.mapToDto(lab))));
     }
 
-    public getById(id: number): Observable<CreatedLaboratoryDto> {
-        const laboratory = from(this.database.findOne({ id }));
+    public getById(id: number): Observable<GetLaboratoryDto> {
 
-        return laboratory.pipe(map(lab => this.mapToDto(lab)));
+        const laboratory = from(this.database.findOne({ id }, {
+            join: {
+                alias: 'laboratory',
+                leftJoinAndSelect: {
+                    exam: 'laboratory.exams',
+                },
+            }
+        }));
+
+        return laboratory.pipe(
+            tap(lab => console.log(lab.exams)),
+            map(lab => new GetLaboratoryDto({
+                id: lab.id,
+                name: lab.name,
+                adress: lab.adress,
+                exams: (lab.exams || []).map(exam => new CreatedExamDto({
+                    id: exam.id,
+                    name: exam.name,
+                    type: exam.type
+                }))
+            }))
+        );
     }
 
     public update(id: number, laboratory: Partial<CreatedLaboratoryDto>): Observable<CreatedLaboratoryDto> {
