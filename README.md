@@ -1,27 +1,39 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Descrição da arquitetura
+Foi utilizado uma implementação baseada no clean architecture, com alguns padrões de repositories para dados fornecidos pelo `TypeORM`.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Core
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Camada de tratamento das regras de negocio da aplicação. Nela ficam as entidades, as abstrações de repository e casos de uso da aplicação.
 
+Entities, representa uma tabela do banco.
+Repository, abstração da obtenção de dados do sistema.
+Use cases, regras de casos de uso da aplicação.
+
+## Data
+
+Onde ficam as implementações dos repositories, ou seja, de onde vem os dados. Nesse projeto tem duas formas de registrar/obter os dados. Por memoria ou pelo banco de dados `mysql`.
+
+Para escolher qual deseja usar, basta ir no modulo de importação e alterar o `use-class` na parte de providers. exemplo:
+
+```ts
+  { provide: LaboratoryRepository, useClass: LaboratoryDataRepository, } // usando o banco de dados
+
+  { provide: LaboratoryRepository, useClass: LaboratoryMockRepository, } // usando mocks e dados em cache
+```
+
+## Infra
+
+Parte de infraestrutura da aplicação, configurações com banco de dados, autenticação, guards, pipes entre outras configurações gerais. Para esse projeto só consegui implementar a configuração de banco de dados por falta de tempo :(
+
+## Presentation
+Porta de entrada da aplicação, aqui ficam os controllers, e onde é exposto todos os dtos da aplicação.
+
+
+## Shared
+Parte compartilhada, pode conter models, dtos, enums entre outras partes exportadas por toda aplicação
+
+
+# Descrição do nestjs
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
