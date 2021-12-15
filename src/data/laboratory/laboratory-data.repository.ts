@@ -62,7 +62,7 @@ export class LaboratoryDataRepository extends LaboratoryRepository {
         );
     }
     public delete(id: number): Observable<void> {
-        const deleted = from(this.database.delete({ id: id }));
+        const deleted = from(this.database.update({ id: id }, { isActive: false }));
 
         return deleted.pipe(map(() => void (0)));
     }
