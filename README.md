@@ -1,5 +1,5 @@
 # Pendencias 
-Do teste, ficou faltando a parte de `Funcionalidades extras`, mas que eu pretendo fazer assim que tiver um tempo, mas provavelmente só no fim de semana (18/12). 
+Ficou faltando a parte de `Funcionalidades extras`, mas que eu pretendo fazer assim que tiver um tempo. 
 
 - Possibilidade de executar cadastro, atualização e remoção em lote;
 - Endpoint que faz a busca por nome do exame e retorna todos os laboratórios associados a
